@@ -3,7 +3,7 @@
 
 ![Moderation Actions Preview](https://raw.github.com/Destroy666x/MyBB-Moderation-Actions-Preview/master/preview1.png "Preview")
 
-**Name**: Moderation Actions Preview 
+**Name**: Moderation Actions Preview  
 **Author**: Destroy666  
 **Version**: 1.0  
 
@@ -23,7 +23,7 @@ Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more infor
 
 **Note 1**: this plugin entirely depends on MyBB logs displayed in MyBB, so many of them may be missing (for example inline thread moderation actions). They won't be displayed as long as MyBB doesn't correct that. So reports about them will be ignored in places connected with the plugin, feel free to post them here though: http://community.mybb.com/forum-157.html  
 **Note 2**: avatar maximal dimensions settings won't work until this MyBB bug gets fixed: http://community.mybb.com/thread-164490.html Reports for it also will be ignored.  
-**Note 3**: moderation actions are displayed for users in groups with Moderator CP -> **Can view moderator logs?** option ticked. You can enable it together with the **Yes, users of this group can access the moderator CP** option disabled if you don't want users to be able to access Mod CP.  
+**Note 3**: moderation actions are displayed for users in groups with Moderator CP -> **Can view moderator logs?** option ticked. You can enable it together with the **Yes, users of this group can access the moderator CP** option disabled if you don't want users to be able to access logs in Mod CP.  
 
 **Changelog**:
 --------------
