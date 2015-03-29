@@ -11,7 +11,7 @@
 ---------
 
 Plugin for MyBB forum software, coded for versions 1.8.x (may also work in 1.6.x/1.4.x after some changes).  
-It displays moderation actions sorted by date in postbit/profile.  
+It displays moderation actions sorted by date in postbit/profile (github-like).  
 6 new templates, 5 template edits, 5 new settings  
 Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more information.  
 
@@ -21,7 +21,7 @@ Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more infor
 **Support**: official MyBB forum - http://community.mybb.com/mods.php?action=profile&uid=58253 (don't PM me, post on forums)  
 **Bug reports**: my github - https://github.com/Destroy666x  
 
-**Note 1**: this plugin entirely depends on MyBB logs displayed in MyBB, so many of them may be missing (for example inline thread moderation actions). They won't be displayed as long as MyBB doesn't correct that. So reports about them will be ignored in places connected with the plugin, feel free to post them here though: http://community.mybb.com/forum-157.html  
+**Note 1**: this plugin entirely depends on MyBB logs displayed in MyBB, so many of them may be missing (for example forumdisplay.php inline thread moderation actions). They won't be displayed as long as MyBB doesn't correct that. So reports about them will be ignored in places connected with the plugin, feel free to post them here though: http://community.mybb.com/forum-157.html  
 **Note 2**: avatar maximal dimensions settings won't work until this MyBB bug gets fixed: http://community.mybb.com/thread-164490.html Reports for it also will be ignored.  
 **Note 3**: moderation actions are displayed for users in groups with Moderator CP -> **Can view moderator logs?** option ticked. You can enable it together with the **Yes, users of this group can access the moderator CP** option disabled if you don't want users to be able to access logs in Mod CP.  
 

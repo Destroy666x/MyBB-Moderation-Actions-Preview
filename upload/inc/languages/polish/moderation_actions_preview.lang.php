@@ -6,7 +6,7 @@ Autor: Destroy666
 Wersja: 1
 Wymagania: Plugin Library
 Informacje: Plugin dla skryptu MyBB, zakodowany dla wersji 1.8.x (może także działać w 1.6.x/1.4.x po zmianach).
-Wyświetla akcje moderatorów posortowane wg daty w postach/profilach.
+Wyświetla akcje moderatorów posortowane wg daty w postach/profilach (w podobny sposób do github).
 6 nowych szablonów, 5 zmian w szablonach, 5 nowych ustawień
 Licencja: GNU GPL v3, 29 June 2007. Więcej informacji w pliku LICENSE.md.
 Support: officjalne forum MyBB - http://community.mybb.com/mods.php?action=profile&uid=58253 (nie odpowiadam na PM, tylko na posty)
