@@ -6,7 +6,7 @@ Author: Destroy666
 Version: 1
 Requirements: Plugin Library
 Info: Plugin for MyBB forum software, coded for versions 1.8.x (may also work in 1.6.x/1.4.x after some changes).
-It displays moderation actions sorted by date in postbit/profile (github-like).
+It displays moderation actions sorted by date in posts/announcements/profiles (github-like).
 6 new templates, 5 template edits, 5 new settings
 Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more information.
 Support: official MyBB forum - http://community.mybb.com/mods.php?action=profile&uid=58253 (don't PM me, post on forums)
@@ -337,7 +337,7 @@ function moderation_actions_preview_showthread(&$post)
 				foreach($dtposts as $pid => $dateline)
 				{	
 					// Insert logs before suitable posts
-					if($log['dateline'] < $dateline)
+					if($log['dateline'] <= $dateline)
 					{
 						$modactionbefpids[$pid] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_posts_max']);
 						break;
@@ -352,6 +352,51 @@ function moderation_actions_preview_showthread(&$post)
 		$post['moderation_actions_bef'] = $modactionbefpids[$post['pid']];
 		$post['moderation_actions_aft'] = $modactionaftpids[$post['pid']];
 	}
+}
+
+$plugins->add_hook('postbit_announcement', 'moderation_actions_preview_announcement');
+
+function moderation_actions_preview_announcement(&$post)
+{
+	global $mybb;
+	
+	$post['moderation_actions_bef'] = $post['moderation_actions_aft'] = '';
+	
+	if($mybb->usergroup['canviewmodlogs'])
+	{
+		global $db;
+		
+		$avasql = $mybb->settings['moderation_actions_preview_avatars'] ? ' u.avatar, u.avatardimensions,' : '';
+		$ipsql = $mybb->settings['moderation_actions_preview_ips'] && is_moderator($post['fid'], 'canviewips')  ? ' m.ipaddress,' : '';
+
+		$q = $db->write_query("SELECT u.username, u.usergroup, u.displaygroup,{$avasql} m.dateline, m.uid,{$ipsql} m.action, m.data
+			FROM {$db->table_prefix}moderatorlog m
+			LEFT JOIN {$db->table_prefix}users u ON(u.uid = m.uid)
+			WHERE m.data LIKE '%aid%'
+		");
+
+		while($log = $db->fetch_array($q))
+		{
+			// Lovely serialization..
+			$data = my_unserialize($log['data']);
+			
+			if($data['aid'] == $post['aid'])
+			{
+				if($log['dateline'] <= $post['dateline'])
+					$post['moderation_actions_bef'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_postbit_max'], 'moderationactionspreview_postbit_row');
+				else
+					$post['moderation_actions_aft'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_postbit_max'], 'moderationactionspreview_postbit_row');
+			}
+		}		
+	}
+}
+
+$plugins->add_hook('postbit_prev', 'moderation_actions_preview_noactions');
+$plugins->add_hook('postbit_pm', 'moderation_actions_preview_noactions');
+
+function moderation_actions_preview_noactions(&$post)
+{
+	$post['moderation_actions_bef'] = $post['moderation_actions_aft'] = '';
 }
 
 $plugins->add_hook('member_profile_end', 'moderation_actions_preview_profile');
