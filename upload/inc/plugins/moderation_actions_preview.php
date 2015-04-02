@@ -3,11 +3,11 @@
 /*
 Name: Moderation Actions Preview
 Author: Destroy666
-Version: 1
+Version: 1.1
 Requirements: Plugin Library
 Info: Plugin for MyBB forum software, coded for versions 1.8.x (may also work in 1.6.x/1.4.x after some changes).
 It displays moderation actions sorted by date in posts/announcements/profiles (github-like).
-6 new templates, 5 template edits, 5 new settings
+7 new templates, 6 template edits, 6 new settings
 Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more information.
 Support: official MyBB forum - http://community.mybb.com/mods.php?action=profile&uid=58253 (don't PM me, post on forums)
 Bug reports: my github - https://github.com/Destroy666x
@@ -57,7 +57,7 @@ function moderation_actions_preview_info()
 		'website'		=> 'https://github.com/Destroy666x',
 		'author'		=> 'Destroy666',
 		'authorsite'	=> 'https://github.com/Destroy666x',
-		'version'		=> 1,
+		'version'		=> 1.1,
 		'codename'		=> 'moderation_actions_preview',
 		'compatibility'	=> '18*'
     );
@@ -93,6 +93,8 @@ function moderation_actions_preview_activate()
 {\$post['moderation_actions_aft']}");
 	find_replace_templatesets('member_profile', '#'.preg_quote('{$signature}').'#i', '{$signature}
 			{$moderation_actions}');
+	find_replace_templatesets('usercp', '#'.preg_quote('{$latest_warnings}').'#i', '{$latest_warnings}
+{$moderation_actions}');
 	
 	// Settings
 	if(!$db->fetch_field($db->simple_select('settinggroups', 'COUNT(1) AS cnt', "name ='moderation_actions_preview'"), 'cnt'))
@@ -144,6 +146,14 @@ function moderation_actions_preview_activate()
 		);
 		
 		$moderation_actions_preview_settings[] = array(
+			'name'			=> 'moderation_actions_preview_allow_own',
+			'title'			=> $db->escape_string($lang->moderation_actions_preview_allow_own),
+			'description'	=> $db->escape_string($lang->moderation_actions_preview_allow_own_desc),
+			'optionscode'	=> 'yesno',
+			'value'			=> 1
+		);
+		
+		$moderation_actions_preview_settings[] = array(
 			'name'			=> 'moderation_actions_preview_profile_limit',
 			'title'			=> $db->escape_string($lang->moderation_actions_preview_profile_limit),
 			'description'	=> $db->escape_string($lang->moderation_actions_preview_profile_limit_desc),
@@ -172,6 +182,7 @@ function moderation_actions_preview_deactivate()
 	find_replace_templatesets('postbit', '#\s*'.preg_quote("{\$post['moderation_actions_aft']}").'#i', '');
 	find_replace_templatesets('postbit_classic', '#\s*'.preg_quote("{\$post['moderation_actions_aft']}").'#i', '');
 	find_replace_templatesets('member_profile', '#\s*'.preg_quote('{$moderation_actions}').'#i', '');
+	find_replace_templatesets('usercp', '#\s*'.preg_quote('{$moderation_actions}').'#i', '');
 }
 
 function moderation_actions_preview_install()
@@ -191,9 +202,9 @@ function moderation_actions_preview_install()
 	
 	$PL->templates('moderationactionspreview', $lang->moderation_actions_preview, array(
 		'ip' => '{$lang->postbit_ipaddress} <a href="{$ipsearchlink}" title="{$iptitle}">{$ipaddress}</a>',
-		'avatar' => '<a href="{$cleanlink}"><img src="{$avimg[\'image\']}" {$avimg[\'width_height\']} alt="" style="vertical-align: middle;" /></a> ',
+		'avatar' => '<a href="{$cleanlink}"><img src="{$avimg[\'image\']}" {$avimg[\'width_height\']} alt="" style="vertical-align: middle; margin-right: 2px;" /></a> ',
 		'post' => '{$lang->postbit_post} <a href="{$postlink}">#{$log[\'pid\']}</a>',
-		'postbit_row' => '<div class="{$trowbackg}">
+		'postbit_row' => '<div class="{$trowbackg}" style="padding: 5px; border-right: 0; border-top: 2px solid #CCC;">
 	{$avatar}{$username}{$lang->comma}{$date} - {$action}{$leftp}{$ip}{$comma}{$postinfo}{$rightp}	
 </div>',
 		'profile_row' => '<tr>
@@ -207,7 +218,14 @@ function moderation_actions_preview_install()
 	</tr>
 	{$modactions}
 </table>
-<br />'
+<br />',
+		'ucp' => '<br />
+<table class="tborder" border="0" cellspacing="{$theme[\'borderwidth\']}" cellpadding="{$theme[\'tablespace\']}">
+	<tr>
+		<td class="thead"><strong>{$lang->moderation_actions_preview_profile}</strong></td>
+	</tr>
+	{$modactions}
+</table>'
 	));
 }
 
@@ -383,9 +401,9 @@ function moderation_actions_preview_announcement(&$post)
 			if($data['aid'] == $post['aid'])
 			{
 				if($log['dateline'] <= $post['dateline'])
-					$post['moderation_actions_bef'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_postbit_max'], 'moderationactionspreview_postbit_row');
+					$post['moderation_actions_bef'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_posts_max'], 'moderationactionspreview_postbit_row');
 				else
-					$post['moderation_actions_aft'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_postbit_max'], 'moderationactionspreview_postbit_row');
+					$post['moderation_actions_aft'] .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_posts_max'], 'moderationactionspreview_postbit_row');
 			}
 		}		
 	}
@@ -400,14 +418,23 @@ function moderation_actions_preview_noactions(&$post)
 }
 
 $plugins->add_hook('member_profile_end', 'moderation_actions_preview_profile');
+$plugins->add_hook('usercp_end', 'moderation_actions_preview_profile');
 
 function moderation_actions_preview_profile()
 {
 	global $mybb, $moderation_actions;
 	
 	$moderation_actions = '';
+	$uid = $mybb->user['uid'];
+	$templ = 'moderationactionspreview_ucp';
 	
-	if($mybb->usergroup['canviewmodlogs'])
+	if(THIS_SCRIPT == 'member.php')
+	{
+		$uid = $GLOBALS['memprofile']['uid'];
+		$templ = 'moderationactionspreview_profile';
+	}
+	
+	if($mybb->usergroup['canviewmodlogs'] || $mybb->settings['moderation_actions_preview_allow_own'] && $uid == $mybb->user['uid'])
 	{
 		global $db, $lang;
 		
@@ -434,7 +461,7 @@ function moderation_actions_preview_profile()
 			// Lovely serialization..
 			$data = my_unserialize($log['data']);
 			
-			if($data['uid'] == $GLOBALS['memprofile']['uid'])
+			if($data['uid'] == $uid)
 			{
 				$modactions .= display_moderation_action($log, $mybb->settings['moderation_actions_preview_avatars_profile_max'], 'moderationactionspreview_profile_row');
 				++$lim;
@@ -448,7 +475,7 @@ function moderation_actions_preview_profile()
 		{
 			global $theme;
 			
-			eval('$moderation_actions = "'.$GLOBALS['templates']->get('moderationactionspreview_profile').'";');
+			eval('$moderation_actions = "'.$GLOBALS['templates']->get($templ).'";');
 		}
 	}
 }
