@@ -5,14 +5,14 @@
 
 **Name**: Moderation Actions Preview  
 **Author**: Destroy666  
-**Version**: 1.0  
+**Version**: 1.1  
 
 **Info**:
 ---------
 
 Plugin for MyBB forum software, coded for versions 1.8.x (may also work in 1.6.x/1.4.x after some changes).  
-It displays moderation actions sorted by date in postbit/profile (github-like).  
-6 new templates, 5 template edits, 5 new settings  
+It displays moderation actions sorted by date in posts/announcements/profiles/User CP (github-like).  
+7 new templates, 6 template edits, 6 new settings  
 Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more information.  
 
 **Support/bug reports**: 
@@ -22,12 +22,13 @@ Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more infor
 **Bug reports**: my github - https://github.com/Destroy666x  
 
 **Note 1**: this plugin entirely depends on MyBB logs displayed in MyBB, so many of them may be missing (for example forumdisplay.php inline thread moderation actions). They won't be displayed as long as MyBB doesn't correct that. So reports about them will be ignored in places connected with the plugin, feel free to post them here though: http://community.mybb.com/forum-157.html  
-**Note 2**: avatar maximal dimensions settings won't work until this MyBB bug gets fixed: http://community.mybb.com/thread-164490.html Reports for it also will be ignored.  
+**Note 2**: avatar maximal dimensions settings won't work until this MyBB bug gets fixed (most likely in 1.8.5): http://community.mybb.com/thread-164490.html Reports for it also will be ignored.  
 **Note 3**: moderation actions are displayed for users in groups with Moderator CP -> **Can view moderator logs?** option ticked. You can enable it together with the **Yes, users of this group can access the moderator CP** option disabled if you don't want users to be able to access logs in Mod CP.  
 
 **Changelog**:
 --------------
 
+**1.1** - added logs connected with user to view in User CP (and a setting to display them regardless of group permission) - thanks to prings for suggestion, fixed wrong variable for announcement avatar max size, added some padding to the postbit row template. Reinstallation is required.
 **1.0** - initial release  
 
 **Requirements**:
@@ -51,6 +52,7 @@ After uploading it ignore the compatibility warning.
 
 * Postbit - add **{$post['moderation_actions_bef']}** at the beginning and **{$post['moderation_actions_aft']}** and the end of postbit and postbit_classic templates
 * Profile - add **{$moderation_actions}** to any profile template (member_profile by default)
+* User CP - add **{$moderation_actions}** to the usercp template
 
 **Translations**:
 -----------------
