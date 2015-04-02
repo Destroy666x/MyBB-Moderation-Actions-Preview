@@ -28,7 +28,7 @@ Released under GNU GPL v3, 29 June 2007. Read the LICENSE.md file for more infor
 **Changelog**:
 --------------
 
-**1.1** - added logs connected with user to view in User CP (and a setting to display them regardless of group permission) - thanks to prings for suggestion, fixed wrong variable for announcement avatar max size, added some padding to the postbit row template. Reinstallation is required.
+**1.1** - added logs connected with user to view in User CP (and a setting to display them regardless of group permission) - thanks to prings for suggestion, fixed wrong variable for announcement avatar max size, added some padding to the postbit row template. Reinstallation is required.  
 **1.0** - initial release  
 
 **Requirements**:
