@@ -348,6 +348,7 @@ function moderation_actions_preview_showthread(&$post)
 				FROM {$db->table_prefix}moderatorlog m
 				LEFT JOIN {$db->table_prefix}users u ON(u.uid = m.uid)
 				WHERE m.tid = {$post['tid']}{$aftsql}{$befsql}
+				ORDER BY m.dateline
 			");
 			
 			while($log = $db->fetch_array($q))
@@ -391,6 +392,7 @@ function moderation_actions_preview_announcement(&$post)
 			FROM {$db->table_prefix}moderatorlog m
 			LEFT JOIN {$db->table_prefix}users u ON(u.uid = m.uid)
 			WHERE m.data LIKE '%aid%'
+			ORDER BY m.dateline
 		");
 
 		while($log = $db->fetch_array($q))
