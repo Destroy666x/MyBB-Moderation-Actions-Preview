@@ -50,7 +50,7 @@ After uploading it ignore the compatibility warning.
 **Templates troubleshooting**:
 ------------------------------
 
-* Postbit - add **{$post['moderation_actions_bef']}** at the beginning and **{$post['moderation_actions_aft']}** and the end of postbit and postbit_classic templates
+* Postbit - add **{$post['moderation_actions_bef']}** at the beginning and **{$post['moderation_actions_aft']}** at the end of postbit and postbit_classic templates
 * Profile - add **{$moderation_actions}** to any profile template (member_profile by default)
 * User CP - add **{$moderation_actions}** to the usercp template
 
